@@ -80,7 +80,7 @@ class Db_mysql
     public function __destruct()
     {
         if ($this->isConnected)
-            mysql_close($this->db);
+            mysqli_close($this->db);
     }
 	
     /*
@@ -152,7 +152,7 @@ class Db_mysql
                         
                         //if (!ctype_digit($val))
                         //{
-                        $val = '\'' . mysql_real_escape_string($val, $this->db) . '\'';
+                        $val = '\'' . mysqli_real_escape_string($this->db, $val) . '\'';
                         //} //Otherwise the string is acting as a digit, so leave it alone
                     }
                     else if (is_int($val) || is_float($val))
@@ -187,10 +187,10 @@ class Db_mysql
                 echo $query, '<br />';;
             
             //Execute query
-            $result = mysql_query($query, $this->db);
+            $result = mysqli_query($this->db, $query);
             if ($result === false)
             { //If there was an error with the query
-                $this->error = mysql_error();
+                $this->error = mysqli_error($this->db);
 		
                 //If in debug mode, send exception, otherwise ignore
                 if (SHOW_ERRORS === 1)
@@ -235,7 +235,7 @@ class Db_mysql
     */
     public function fetch(&$result)
     {
-        $ret = mysql_fetch_object($result);
+        $ret = mysqli_fetch_object($result);
         return $ret;
     }
 
@@ -260,7 +260,7 @@ class Db_mysql
     */
     public function fetchArray(&$result)
     {
-        $ret = mysql_fetch_array($result);
+        $ret = mysqli_fetch_array($result);
         return $ret;
     }
 
@@ -334,7 +334,7 @@ class Db_mysql
     {
         $result = $this->execute($query, $params);
         $ret = $this->fetch($result);
-        mysql_free_result($result);
+        mysqli_free_result($result);
         return $ret;
     }
 	
@@ -350,7 +350,7 @@ class Db_mysql
     */
     public function numRows(&$result)
     {
-        return mysql_num_rows($result);
+        return mysqli_num_rows($result);
     }
 	
     /*
@@ -381,7 +381,7 @@ class Db_mysql
             $this->connect();
 
         $table = str_replace('<ezrpg>', DB_PREFIX, $table);
-        $query = 'INSERT INTO ' . mysql_real_escape_string($table, $this->db) . ' (';
+        $query = 'INSERT INTO ' . mysqli_real_escape_string($this->db, $table) . ' (';
 		
         $cols = count($data);
         $part1 = ''; //List of column names
@@ -391,7 +391,7 @@ class Db_mysql
         foreach ($data as $col=>$val)
         {
             //Append column name
-            $part1 .= mysql_real_escape_string($col, $this->db);
+            $part1 .= mysqli_real_escape_string($this->db, $col);
             
             //Append a question mark and leave sanitation to the <execute> method through variable binding.
             $part2 .= '?';
@@ -413,7 +413,7 @@ class Db_mysql
 		
         $this->execute($query, $params);
 		
-        return mysql_insert_id($this->db);
+        return mysqli_insert_id($this->db);
     }
 	
     /*
@@ -425,7 +425,7 @@ class Db_mysql
     */
     public function affected()
     {
-        return mysql_affected_rows($this->db);
+        return mysqli_affected_rows($this->db);
     }
 	
     /*
@@ -447,7 +447,7 @@ class Db_mysql
     {
         if ($this->isConnected === false)
         {
-            $this->db = mysql_connect($this->host, $this->username, $this->password);
+            $this->db = mysqli_connect($this->host, $this->username, $this->password);
             if (!$this->db)
             {
                 throw new DbException($this->db, SERVER_ERROR);
@@ -456,7 +456,7 @@ class Db_mysql
             {
                 $this->isConnected = true;
 		
-                $db_selected = mysql_select_db($this->dbname);
+                $db_selected = mysqli_select_db($this->db, $this->dbname);
                 if (!$db_selected)
                 {
                     throw new DbException($this->dbname, DATABASE_ERROR);
