@@ -11,7 +11,11 @@ class Install_Populate extends InstallerFactory
 		{
 			$e->__toString();
 		}
-		
+    $query0 = <<<QUERY
+CREATE DATABASE IF NOT EXISTS {$config_dbname};
+QUERY;
+    $db->execute($query0);
+
 		$query1 = <<<QUERY
 CREATE TABLE IF NOT EXISTS `<ezrpg>players` (
   `id` int(11) unsigned NOT NULL auto_increment,
