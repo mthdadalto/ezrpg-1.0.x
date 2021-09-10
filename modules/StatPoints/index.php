@@ -41,12 +41,14 @@ class Module_StatPoints extends Base_Module
     */
     private function spend()
     {
+        require_once CUR_DIR . '/defaults.php';
+
         $msg = '';
         switch($_POST['stat'])
         {
           case 'Strength':
               //Add to weight limit
-              $query = $this->db->execute('UPDATE <ezrpg>players SET
+              $this->db->execute('UPDATE <ezrpg>players SET
 				stat_points=stat_points-1,
 				strength=strength+1
 				WHERE id=?', array($this->player->id));
@@ -54,17 +56,17 @@ class Module_StatPoints extends Base_Module
               break;
           case 'Vitality':
               //Add to hp and max_hp
-              $query = $this->db->execute('UPDATE <ezrpg>players SET
+              $this->db->execute('UPDATE <ezrpg>players SET
 				stat_points=stat_points-1,
 				vitality=vitality+1,
-				hp=hp+5,
-				max_hp=max_hp+5
+				hp=hp+'+INCREMENT_MAX_HP+',
+				max_hp=max_hp+'+INCREMENT_MAX_HP+'
 				WHERE id=?', array($this->player->id));
               
               $msg = 'You have increased your vitality!';
               break;
           case 'Agility':
-              $query = $this->db->execute('UPDATE <ezrpg>players SET
+              $this->db->execute('UPDATE <ezrpg>players SET
 				stat_points=stat_points-1,
 				agility=agility+1
 				WHERE id=?', array($this->player->id));
@@ -72,7 +74,7 @@ class Module_StatPoints extends Base_Module
               $msg = 'You have increased your agility!';
               break;
           case 'Dexterity':
-              $query = $this->db->execute('UPDATE <ezrpg>players SET
+              $this->db->execute('UPDATE <ezrpg>players SET
 				stat_points=stat_points-1,
 				dexterity=dexterity+1
 				WHERE id=?', array($this->player->id));

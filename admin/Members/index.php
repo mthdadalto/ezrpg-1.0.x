@@ -171,8 +171,21 @@ class Admin_Members extends Base_Module
         }
         else
         {
+            require_once CUR_DIR . '/defaults.php';
+
             //No errors, update player info
-            $query = $this->db->execute('UPDATE `<ezrpg>players` SET `email`=?, `rank`=?, `money`=?, `level`=? WHERE `id`=?', array($_POST['email'], $_POST['rank'], $_POST['money'], $_POST['level'], $member->id));
+
+            $level = $_POST['level'];
+
+            $stat_points = INITIAL_STAT_POINTS + INCREMENT_STAT_POINTS * $level;
+            $max_exp = INITIAL_MAX_EXP + INCREMENT_MAX_EXP * $level;
+            $exp = $max_exp - INCREMENT_MAX_EXP;
+            $max_energy = INITIAL_MAX_ENERGY + INCREMENT_MAX_ENERGY * $level;
+            $energy = $max_energy;
+            $hp = INITIAL_MAX_HP + INCREMENT_MAX_HP * $level;
+            $max_hp = $hp;
+			
+			$this->db->execute('UPDATE `<ezrpg>players` SET `email`=?, `rank`=?, `money`=?, `level`=?, `stat_points`=?, `max_exp`=?, `exp`=?, `hp`=?, `max_hp`=?, `energy`=?, `max_energy`=?, `strength`=?, `vitality`=?, `agility`=?, `dexterity`=? WHERE `id`=?', array($_POST['email'], $_POST['rank'], $_POST['money'], $_POST['level'], $stat_points, $max_exp, $exp, $hp, $max_hp, $energy, $max_energy, INITIAL_STRENGTH, INITIAL_VITALITY, INITIAL_AGILITY, INITIAL_DEXTERITY,  $member->id));
             
             $msg = 'You have updated the player\'s info.';
             header('Location: index.php?mod=Members&msg=' . urlencode($msg));

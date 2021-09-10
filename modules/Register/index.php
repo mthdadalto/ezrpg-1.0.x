@@ -148,6 +148,9 @@ class Module_Register extends Base_Module
         {
             unset($insert);
             $insert = Array();
+
+            require_once CUR_DIR . '/defaults.php';
+
             //Add new user to database
             $insert['username'] = $_POST['username'];
             $insert['email'] = $_POST['email'];
@@ -156,6 +159,18 @@ class Module_Register extends Base_Module
             $insert['registered'] = time();
             $insert['sex'] = $_POST['sex'];
             $insert['lang'] = $_POST['lang'];
+
+            $insert['stat_points'] = INITIAL_STAT_POINTS;
+            $insert['max_exp'] = INITIAL_MAX_EXP;
+            $insert['exp'] = INITIAL_EXP;
+            $insert['max_energy'] = INITIAL_MAX_ENERGY;
+            $insert['energy'] = INITIAL_ENERGY;
+            $insert['max_hp'] = INITIAL_MAX_HP;
+            $insert['hp'] = INITIAL_HP;
+            $insert['strength'] = INITIAL_STRENGTH;
+            $insert['vitality'] = INITIAL_VITALITY;
+            $insert['agility'] = INITIAL_AGILITY;
+            $insert['dexterity'] = INITIAL_DEXTERITY;
 
             global $hooks;
             //Run register hook

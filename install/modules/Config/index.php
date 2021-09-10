@@ -87,7 +87,7 @@ CONF;
 				$this->header();
 				echo "<h2>Configuration file written</h2>\n";
 				echo "<p>The configuration has ben verified, and the config.php file has been successfully written.</p><br />\n";
-				echo "<a href=\"index.php?step=Populate\">Continue to next step</a>";
+				echo "<a href=\"index.php?step=Defaults\">Continue to next step</a>";
 				$this->footer();
 				die;
 			}
